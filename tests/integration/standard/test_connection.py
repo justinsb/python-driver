@@ -28,6 +28,7 @@ from cassandra import ConsistencyLevel, OperationTimedOut
 from cassandra.cluster import NoHostAvailable
 from cassandra.protocol import QueryMessage
 from cassandra.io.asyncorereactor import AsyncoreConnection
+from cassandra.io.eventletreactor import EventletConnection
 
 try:
     from cassandra.io.libevreactor import LibevConnection
@@ -232,6 +233,16 @@ class AsyncoreConnectionTests(ConnectionTests, unittest.TestCase):
     def setUp(self):
         if 'gevent.monkey' in sys.modules:
             raise unittest.SkipTest("Can't test asyncore with gevent monkey patching")
+        ConnectionTests.setUp(self)
+
+
+class EventletConnectionTests(ConnectionTests, unittest.TestCase):
+
+    klass = EventletConnection
+
+    def setUp(self):
+        if 'gevent.monkey' in sys.modules:
+            raise unittest.SkipTest("Can't test eventlet with gevent monkey patching")
         ConnectionTests.setUp(self)
 
 
